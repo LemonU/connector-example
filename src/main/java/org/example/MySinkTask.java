@@ -1,7 +1,5 @@
 package org.example;
 
-import org.apache.kafka.connect.connector.Task;
-import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
@@ -24,10 +22,11 @@ public class MySinkTask extends SinkTask {
 
     @Override
     public void start(Map<String, String> props) {
-//        filename = props.get("filename");
-        filename = props.get("file");
+        filename = props.get(MyConfig.SINK_FILENAME_CONFIG);
         try {
-            writer = new FileWriter(new File(filename));
+            File fp = new File(filename);
+            fp.createNewFile();
+            writer = new FileWriter(fp);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,10 +35,14 @@ public class MySinkTask extends SinkTask {
     @Override
     public void put(Collection<SinkRecord> sinkRecords) {
         for (SinkRecord record : sinkRecords) {
-            String recordStrRpr = record.valueSchema().fields().stream()
-                    .map(field ->
-                            field.name() + ":" + ((Struct)record.value()).get(field).toString())
-                    .collect(Collectors.joining(", "));
+//            String recordStrRpr = record
+//                    .valueSchema()
+//                    .fields()
+//                    .stream()
+//                    .map(field ->
+//                            field.name() + ":" + ((Struct)record.value()).get(field).toString())
+//                    .collect(Collectors.joining(", "));
+            String recordStrRpr = record.toString();
             try {
                 writer.append(recordStrRpr);
                 writer.append('\n');

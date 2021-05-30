@@ -1,0 +1,9 @@
+{
+  "name": "my-test-connector",
+  "config": {
+    "connector.class": "org.example.MySinkConnector",
+    "tasks.max": 1,
+    "topics": "connect-test",
+    "filename": "test-sink-file.txt"
+  }
+}
